@@ -271,7 +271,7 @@ jobs:
     - get: version
       passed: [test-rc]
     - get: pcf-pipelines
-      passed: [test-rc]
+      #passed: [test-rc]
     - get: pivnet-rc
       trigger: true
       passed: [test-rc]
@@ -286,13 +286,13 @@ jobs:
     output_mapping: { patched-release: release }
 
   - do:
-    - task: set-rc-install-pcf-aws
-      params:
-        PIPELINE_PARAMS: {{install_pcf_aws_current_params}}
-        PIPELINE_NAME: rc-install-pcf-aws
-        PIPELINE_PATH: release/pcf-pipelines/install-pcf/aws/pipeline.yml
-        <<: *atc_creds
-      file: pcf-pipelines/ci/tasks/set_pipeline.yml
+    # - task: set-rc-install-pcf-aws
+      # params:
+        # PIPELINE_PARAMS: {{install_pcf_aws_current_params}}
+        # PIPELINE_NAME: rc-install-pcf-aws
+        # PIPELINE_PATH: release/pcf-pipelines/install-pcf/aws/pipeline.yml
+        # <<: *atc_creds
+      # file: pcf-pipelines/ci/tasks/set_pipeline.yml
 #
 #    - task: set-upgrade-ert-aws-current-pipeline
 #      params:
@@ -335,13 +335,13 @@ jobs:
         <<: *atc_creds
       file: pcf-pipelines/ci/tasks/set_pipeline.yml
 
-    - task: set-rc-install-pcf-azure
-      params:
-       PIPELINE_PARAMS: {{install_pcf_azure_current_params}}
-       PIPELINE_NAME: rc-install-pcf-azure
-       PIPELINE_PATH: release/pcf-pipelines/install-pcf/azure/pipeline.yml
-       <<: *atc_creds
-      file: pcf-pipelines/ci/tasks/set_pipeline.yml
+    # - task: set-rc-install-pcf-azure
+      # params:
+       # PIPELINE_PARAMS: {{install_pcf_azure_current_params}}
+       # PIPELINE_NAME: rc-install-pcf-azure
+       # PIPELINE_PATH: release/pcf-pipelines/install-pcf/azure/pipeline.yml
+       # <<: *atc_creds
+      # file: pcf-pipelines/ci/tasks/set_pipeline.yml
 
     - task: set-rc-install-pcf-vsphere
       params:
