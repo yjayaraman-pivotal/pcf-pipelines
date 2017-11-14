@@ -1,0 +1,42 @@
+resources:
+- name: pcf-pipelines
+  type: git
+  source:
+    uri: git@github.com:pivotal-cf/pcf-pipelines.git
+    branch: nsx
+    private_key: {{git_private_key}}
+
+jobs:
+- name: setup-nsx-v
+  plan:
+  - get: pcf-pipelines
+  - task: setup
+    file: pcf-pipelines/install-pcf/vsphere/tasks/setup-nsxv/task.yml
+    params:
+      GOVC_INSECURE: {{vcenter_insecure}}
+      GOVC_CA_CERT: {{vcenter_ca_cert}}
+      GOVC_URL: {{vcenter_host}}
+      GOVC_USERNAME: {{vcenter_usr}}
+      GOVC_PASSWORD: {{vcenter_pwd}}
+      GOVC_DATACENTER: {{vcenter_datacenter}}
+      GOVC_DATASTORE: {{vcenter_datastore}}
+      GOVC_NETWORK: {{om_vm_network}}
+      GOVC_RESOURCE_POOL: {{om_resource_pool}}
+      GOVC_HOST: {{om_vm_host}}
+
+- name: teardown-nsx-v
+  plan:
+  - get: pcf-pipelines
+  - task: teardown
+    file: pcf-pipelines/install-pcf/vsphere/tasks/teardown-nsxv/task.yml
+    params:
+      GOVC_INSECURE: {{vcenter_insecure}}
+      GOVC_CA_CERT: {{vcenter_ca_cert}}
+      GOVC_URL: {{vcenter_host}}
+      GOVC_USERNAME: {{vcenter_usr}}
+      GOVC_PASSWORD: {{vcenter_pwd}}
+      GOVC_DATACENTER: {{vcenter_datacenter}}
+      GOVC_DATASTORE: {{vcenter_datastore}}
+      GOVC_NETWORK: {{om_vm_network}}
+      GOVC_RESOURCE_POOL: {{om_resource_pool}}
+      GOVC_HOST: {{om_vm_host}}
