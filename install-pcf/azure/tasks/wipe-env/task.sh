@@ -4,17 +4,30 @@ set -eu
 ROOT="${PWD}"
 
 function delete-opsman-installation() {
-  source "${ROOT}/pcf-pipelines/functions/check_opsman_available.sh"
+function check_opsman_available {
+  local opsman_domain=$1
+
+  if [[ -z $(dig +short $opsman_domain) ]]; then
+    echo "unavailable"
+    return
+  fi
+
+  status_code=$(curl -L -s -o /dev/null -w "%{http_code}" -k "https://${opsman_domain}/login/ensure_availability")
+  if [[ $status_code != 200 ]]; then
+    echo "unavailable"
+    return
+  fi
+
+  echo "available"
+}
 
   OPSMAN_AVAILABLE=$(check_opsman_available "${OPSMAN_DOMAIN_OR_IP_ADDRESS}")
   if [[ ${OPSMAN_AVAILABLE} == "available" ]]; then
     om-linux \
       --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
       --skip-ssl-validation \
-      --client-id "${OPSMAN_CLIENT_ID}" \
-      --client-secret "${OPSMAN_CLIENT_SECRET}" \
-      --username "${OPSMAN_USERNAME}" \
-      --password "${OPSMAN_PASSWORD}" \
+      --username ${OPSMAN_USERNAME} \
+      --password ${OPSMAN_PASSWORD} \
       delete-installation
   fi
 }
@@ -33,8 +46,6 @@ function delete-infrastructure() {
   echo "=============================================================================================="
   echo "Executing Terraform Destroy ...."
   echo "=============================================================================================="
-
-  terraform init "pcf-pipelines/install-pcf/azure/terraform/${AZURE_PCF_TERRAFORM_TEMPLATE}"
 
   terraform destroy -force \
     -var "subscription_id=${AZURE_SUBSCRIPTION_ID}" \
@@ -65,6 +76,7 @@ function delete-infrastructure() {
     -var "subnet_infra_id=dontcare" \
     -var "ops_manager_image_uri=dontcare" \
     -var "vm_admin_username=dontcare" \
+    -var "vm_admin_password=dontcare" \
     -var "vm_admin_public_key=dontcare" \
     -var "azure_multi_resgroup_network=dontcare" \
     -var "azure_multi_resgroup_pcf=dontcare" \

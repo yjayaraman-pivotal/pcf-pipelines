@@ -46,13 +46,12 @@ echo "==========================================================================
 echo "Executing Terraform Plan ..."
 echo "=============================================================================================="
 
-terraform init "pcf-pipelines/install-pcf/azure/terraform/${AZURE_PCF_TERRAFORM_TEMPLATE}"
-
 terraform plan \
   -var "subscription_id=${AZURE_SUBSCRIPTION_ID}" \
   -var "client_id=${AZURE_CLIENT_ID}" \
   -var "client_secret=${AZURE_CLIENT_SECRET}" \
   -var "tenant_id=${AZURE_TENANT_ID}" \
+  -var "environment=${AZURE_ENVIRONMENT}" \
   -var "location=${AZURE_REGION}" \
   -var "env_name=${AZURE_TERRAFORM_PREFIX}" \
   -var "env_short_name=${ENV_SHORT_NAME}" \
@@ -65,6 +64,7 @@ terraform plan \
   -var "pcf_ert_domain=${PCF_ERT_DOMAIN}" \
   -var "ops_manager_image_uri=${PCF_OPSMAN_IMAGE_URI}" \
   -var "vm_admin_username=${AZURE_VM_ADMIN}" \
+  -var "vm_admin_password=${AZURE_VM_PASSWORD}" \
   -var "vm_admin_public_key=${PCF_SSH_KEY_PUB}" \
   -var "azure_multi_resgroup_network=${AZURE_MULTI_RESGROUP_NETWORK}" \
   -var "azure_multi_resgroup_pcf=${AZURE_MULTI_RESGROUP_PCF}" \

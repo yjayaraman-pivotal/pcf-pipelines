@@ -16,8 +16,7 @@ set -ex
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-blobs=$(az storage blob list -c ${CONTAINER})
-files=$(echo "$blobs" | jq -r .[].name)
+files=$(az storage blob list -c ${CONTAINER} | jq -r .[].name)
 
 set +e
 echo ${files} | grep terraform.tfstate

@@ -9,6 +9,7 @@ variable "env_short_name" {
   description = "Used for creating storage accounts. Must be a-z only, no longer than 10 characters"
 }
 
+variable "environment" {}
 variable "subscription_id" {}
 variable "client_id" {}
 variable "client_secret" {}
@@ -25,6 +26,7 @@ variable "pcf_ert_domain" {}
 
 variable "ops_manager_image_uri" {}
 variable "vm_admin_username" {}
+variable "vm_admin_password" {}
 variable "vm_admin_public_key" {}
 
 variable "azure_account_name" {}
