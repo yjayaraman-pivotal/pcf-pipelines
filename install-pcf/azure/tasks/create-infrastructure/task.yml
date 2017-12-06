@@ -9,7 +9,7 @@ image_resource:
 inputs:
   - name: pcf-pipelines
   - name: opsman-metadata
-  - name: terraform-state
+
 
 outputs:
   - name: terraform-state-output

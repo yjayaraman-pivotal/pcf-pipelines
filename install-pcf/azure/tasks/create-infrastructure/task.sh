@@ -1,5 +1,22 @@
 #!/bin/bash
 set -e
+az cloud set --name ${AZURE_ENVIRONMENT}
+
+files=$(az storage blob list -c ${CONTAINER} | jq -r .[].name)
+
+set +e
+echo ${files} | grep terraform.tfstate 
+if [ "$?" -gt "0" ]; then
+  echo "terraform.tfstate file found, skipping"
+  exit 1
+else
+  az storage blob download -c ${CONTAINER} -n terraform.tfstate -f terraform.tfstate
+  set +x
+  if [ "$?" -gt "0" ]; then
+    echo "Failed to download tfstate file"
+    exit 1
+  fi
+fi
 
 # Copy base template with no clobber if not using the base template
 if [[ ! ${AZURE_PCF_TERRAFORM_TEMPLATE} == "c0-azure-base" ]]; then

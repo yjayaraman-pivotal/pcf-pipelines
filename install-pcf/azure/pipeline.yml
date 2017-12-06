@@ -128,6 +128,9 @@ jobs:
   - task: create-infrastructure
     file: pcf-pipelines/install-pcf/azure/tasks/create-infrastructure/task.yml
     params:
+      AZURE_STORAGE_ACCOUNT: {{terraform_azure_account_name}}
+      AZURE_STORAGE_KEY: {{terraform_azure_access_key}}
+      CONTAINER: {{azure_storage_container_name}}
       AZURE_ACCOUNT_NAME: {{azure_account_name}}
       AZURE_BUILDPACKS_CONTAINER: {{azure_buildpacks_container}}
       AZURE_CLIENT_ID: {{azure_client_id}}
