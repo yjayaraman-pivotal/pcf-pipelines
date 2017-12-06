@@ -16,6 +16,8 @@ set -ex
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+az cloud set --name ${ENVIRONMENT}
+
 files=$(az storage blob list -c ${CONTAINER} | jq -r .[].name)
 
 set +e
