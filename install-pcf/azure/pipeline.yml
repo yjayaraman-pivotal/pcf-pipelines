@@ -25,6 +25,7 @@ resources:
 - name: terraform-state
   type: azure-blobstore
   source:
+    environment: {{azure_environment}}
     container: {{azure_storage_container_name}}
     storage_account_key: {{terraform_azure_access_key}}
     storage_account_name: {{terraform_azure_account_name}}
@@ -115,9 +116,8 @@ jobs:
   max_in_flight: 1
   plan:
   - aggregate:
-    - do:
-      - get: pcf-pipelines
-    - get: terraform-state
+    - get: pcf-pipelines
+    - get: pcf-pipelines
     - get: pivnet-opsmgr
       params:
         globs:
