@@ -143,6 +143,7 @@ jobs:
       AZURE_PACKAGES_CONTAINER: {{azure_packages_container}}
       AZURE_PCF_TERRAFORM_TEMPLATE: {{azure_pcf_terraform_template}}
       AZURE_ENVIRONMENT: {{azure_environment}}
+      AZURE_TERRAFORM_ENVIRONMENT: {{azure_terraform_environment}}
       AZURE_REGION: {{azure_region}}
       AZURE_RESOURCES_CONTAINER: {{azure_resources_container}}
       AZURE_SUBSCRIPTION_ID: {{azure_subscription_id}}

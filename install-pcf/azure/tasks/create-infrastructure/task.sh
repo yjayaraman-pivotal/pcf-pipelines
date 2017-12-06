@@ -68,7 +68,7 @@ terraform plan \
   -var "client_id=${AZURE_CLIENT_ID}" \
   -var "client_secret=${AZURE_CLIENT_SECRET}" \
   -var "tenant_id=${AZURE_TENANT_ID}" \
-  -var "environment=${AZURE_ENVIRONMENT}" \
+  -var "environment=${AZURE_TERRAFORM_ENVIRONMENT}" \
   -var "location=${AZURE_REGION}" \
   -var "env_name=${AZURE_TERRAFORM_PREFIX}" \
   -var "env_short_name=${ENV_SHORT_NAME}" \
