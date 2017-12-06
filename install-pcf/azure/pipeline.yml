@@ -22,14 +22,6 @@ groups:
   - configure-ert
   - deploy-ert
 resources:
-- name: terraform-state
-  type: azure-blobstore
-  source:
-    environment: {{azure_environment}}
-    container: {{azure_storage_container_name}}
-    storage_account_key: {{terraform_azure_access_key}}
-    storage_account_name: {{terraform_azure_account_name}}
-    versioned_file: terraform.tfstate
 - name: pcf-pipelines
   type: git
   source:
@@ -89,7 +81,6 @@ jobs:
   - aggregate:
     - do:
       - get: pcf-pipelines
-    - get: terraform-state
   - task: wipe-env
     file: pcf-pipelines/install-pcf/azure/tasks/wipe-env/task.yml
     params:
@@ -105,10 +96,6 @@ jobs:
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
       OPSMAN_PASSWORD: {{opsman_admin_password}}
       OPSMAN_USERNAME: {{opsman_admin_username}}
-  ensure:
-    put: terraform-state
-    params:
-      file: terraform-state-output/terraform.tfstate
 - name: create-infrastructure
   serial: true
   serial_groups:
@@ -327,7 +314,6 @@ jobs:
   - aggregate:
     - do:
       - get: pcf-pipelines
-    - get: terraform-state
     - get: pivnet-opsmgr
       passed:
       - upload-ert
