@@ -168,10 +168,6 @@ jobs:
       PCF_ERT_DOMAIN: {{pcf_ert_domain}}
       PCF_OPSMAN_DISK_SIZE_IN_GB: {{pcf_opsman_disk_size_in_gb}}
       PCF_SSH_KEY_PUB: {{pcf_ssh_key_pub}}
-  ensure:
-    put: terraform-state
-    params:
-      file: terraform-state-output/terraform.tfstate
 - name: config-opsman-auth
   serial: true
   serial_groups:
