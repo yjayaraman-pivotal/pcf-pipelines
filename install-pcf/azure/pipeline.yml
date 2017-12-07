@@ -280,8 +280,7 @@ jobs:
   - opsman
   plan:
   - aggregate:
-    - do:
-      - get: pcf-pipelines
+    - get: pcf-pipelines
     - get: pivnet-opsmgr
       passed:
       - deploy-director
