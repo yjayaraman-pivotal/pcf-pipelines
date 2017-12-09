@@ -21,7 +21,37 @@ groups:
   - upload-ert
   - configure-ert
   - deploy-ert
+
+resource_types:
+ - name: azure-blobstore
+   type: docker-image
+   source:
+     repository: yadhav/azure-blobstore-resource
+ 
+ - name: pivnet
+   type: docker-image
+   source:
+     repository: pivotalcf/pivnet-resource
+     tag: latest-final
+ 
+ - name: slack-notification
+   type: docker-image
+   source:
+     repository: cfcommunity/slack-notification-resource
+     tag: latest
+ 
 resources:
+- name: terraform-state
+    type: azure-blobstore
+    source:
+      environment: {{azure_environment}}
+      storage_account_name: {{terraform_azure_account_name}}
+      storage_account_key: {{terraform_azure_access_key}}
+      container: {{azure_storage_container_name}}
+      storage_account_key: {{terraform_azure_access_key}}
+      storage_account_name: {{terraform_azure_account_name}}
+      versioned_file: terraform.tfstate
+
 - name: pcf-pipelines
   type: git
   source:
