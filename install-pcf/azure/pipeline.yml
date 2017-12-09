@@ -217,11 +217,8 @@ jobs:
   max_in_flight: 1
   plan:
   - aggregate:
-    - do:
-      - get: pcf-pipelines
+    - get: pcf-pipelines
     - get: pivnet-opsmgr
-      passed:
-      - config-opsman-auth
       params:
         globs: []
   - task: config-director
