@@ -30,7 +30,7 @@ resources:
     storage_account_name: {{terraform_azure_account_name}}
     storage_access_key: {{terraform_azure_access_key}}
     container: {{azure_storage_container_name}}
-    regex: terraform(.*).tfstate
+    regexp: terraform(.*).tfstate
 
 - name: pcf-pipelines
   type: git
