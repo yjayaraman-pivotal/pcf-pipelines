@@ -90,6 +90,8 @@ jobs:
   - full
   ensure:
     put: terraform-state
+    params:
+      file: terraform-state-output/terraform.tfstate
   max_in_flight: 1
   plan:
   - aggregate:
@@ -114,10 +116,15 @@ jobs:
   serial: true
   serial_groups:
   - full
+  ensure:
+    put: terraform-state
+    params:
+      file: terraform-state-output/terraform.tfstate
   max_in_flight: 1
   plan:
   - aggregate:
     - get: pcf-pipelines
+    - get: terraform-state
     - get: pivnet-opsmgr
       params:
         globs:
