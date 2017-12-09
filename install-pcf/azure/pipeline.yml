@@ -22,35 +22,15 @@ groups:
   - configure-ert
   - deploy-ert
 
-resource_types:
- - name: azure-blobstore
-   type: docker-image
-   source:
-     repository: yadhav/azure-blobstore-resource
- 
- - name: pivnet
-   type: docker-image
-   source:
-     repository: pivotalcf/pivnet-resource
-     tag: latest-final
- 
- - name: slack-notification
-   type: docker-image
-   source:
-     repository: cfcommunity/slack-notification-resource
-     tag: latest
- 
 resources:
 - name: terraform-state
-    type: azure-blobstore
-    source:
-      environment: {{azure_environment}}
-      storage_account_name: {{terraform_azure_account_name}}
-      storage_account_key: {{terraform_azure_access_key}}
-      container: {{azure_storage_container_name}}
-      storage_account_key: {{terraform_azure_access_key}}
-      storage_account_name: {{terraform_azure_account_name}}
-      versioned_file: terraform.tfstate
+  type: azure-blobstore
+  source:
+    environment: {{azure_environment}}
+    storage_account_name: {{terraform_azure_account_name}}
+    storage_access_key: {{terraform_azure_access_key}}
+    container: {{azure_storage_container_name}}
+    versioned_file: terraform.tfstate
 
 - name: pcf-pipelines
   type: git
@@ -73,11 +53,13 @@ resources:
     product_version: {{ert_major_minor_version}}
     sort_by: semver
   check_every: 4h
+
 resource_types:
 - name: azure-blobstore
   type: docker-image
   source:
-    repository: czero/azure-blobstore-resource
+    repository: yadhav/azure-blobstore-resource
+    tag: latest
 - name: pivnet
   type: docker-image
   source:
@@ -106,11 +88,13 @@ jobs:
   serial: true
   serial_groups:
   - full
+  ensure:
+    put: terraform-state
   max_in_flight: 1
   plan:
   - aggregate:
-    - do:
-      - get: pcf-pipelines
+    - get: pcf-pipelines
+    - get: terraform-state
   - task: wipe-env
     file: pcf-pipelines/install-pcf/azure/tasks/wipe-env/task.yml
     params:
