@@ -160,7 +160,7 @@ security_configuration=$(
     }'
 )
 
-echo '{"director_configuration": "$director_configuration"'
+echo '{"director_configuration": "${director_configuration}"}'
 
 om-linux \
   --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \

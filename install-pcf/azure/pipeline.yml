@@ -219,8 +219,6 @@ jobs:
   - aggregate:
     - get: pcf-pipelines
     - get: pivnet-opsmgr
-      passed:
-      - config-opsman-auth
       params:
         globs: []
   - task: config-director
