@@ -160,15 +160,15 @@ security_configuration=$(
     }'
 )
 
-echo '{"director_configuration": "${director_configuration}"}'
+echo '{"director_configuration": '+"${director_configuration}"+'}'
 
 om-linux \
   --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
   --skip-ssl-validation \
   --client-id "${AZURE_CLIENT_ID}" \
   --client-secret "${AZURE_CLIENT_SECRET}" \
-  --username "$PCF_OPSMAN_ADMIN" \
-  --password "$PCF_OPSMAN_ADMIN_PASSWORD" \
+  --username "${PCF_OPSMAN_ADMIN}" \
+  --password "${PCF_OPSMAN_ADMIN_PASSWORD}" \
   configure-bosh \
   --iaas-configuration "${iaas_configuration}" \
   --director-configuration "${director_configuration}" \
