@@ -18,16 +18,4 @@ if [[ $opsman_available == "available" ]]; then
     delete-installation
 fi
 
-# Delete Active OpsMan
-possible_opsmans=$(govc find ${GOVC_RESOURCE_POOL} -type m -vm.ip ${OPSMAN_IP} -runtime.powerState poweredOn)
 
-for opsman in ${possible_opsmans}; do
-  network="$(govc vm.info -r=true -json ${opsman} | jq -r '.VirtualMachines[0].Guest.Net[0].Network')"
-  if [[ ${network} == ${GOVC_NETWORK} ]]; then
-    echo "Powering off and removing ${opsman}..."
-    set +e
-    govc vm.power -vm.ipath=${opsman} -off
-    set -e
-    govc vm.destroy -vm.ipath=${opsman}
-  fi
-done
