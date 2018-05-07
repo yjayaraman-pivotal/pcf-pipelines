@@ -19,7 +19,7 @@ if [[ $opsman_available == "available" ]]; then
 fi
 
 # Delete Active OpsMan
-possible_opsmans=$(govc find ${GOVC_RESOURCE_POOL} -type m -guest.ipAddress ${OPSMAN_IP} -runtime.powerState poweredOn)
+possible_opsmans=$(govc find ${GOVC_RESOURCE_POOL} -type m -vm.ipAddress ${OPSMAN_IP} -runtime.powerState poweredOn)
 
 for opsman in ${possible_opsmans}; do
   network="$(govc vm.info -r=true -json ${opsman} | jq -r '.VirtualMachines[0].Guest.Net[0].Network')"
