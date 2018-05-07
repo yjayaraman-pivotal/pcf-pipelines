@@ -4,30 +4,15 @@ set -eu
 ROOT="${PWD}"
 
 function delete-opsman-installation() {
-function check_opsman_available {
-  local opsman_domain=$1
-
-  if [[ -z $(dig +short $opsman_domain) ]]; then
-    echo "unavailable"
-    return
-  fi
-
-  status_code=$(curl -L -s -o /dev/null -w "%{http_code}" -k "https://${opsman_domain}/login/ensure_availability")
-  if [[ $status_code != 200 ]]; then
-    echo "unavailable"
-    return
-  fi
-
-  echo "available"
-}
+  source "${ROOT}/pcf-pipelines/functions/check_opsman_available.sh"
 
   OPSMAN_AVAILABLE=$(check_opsman_available "${OPSMAN_DOMAIN_OR_IP_ADDRESS}")
   if [[ ${OPSMAN_AVAILABLE} == "available" ]]; then
     om-linux \
       --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
       --skip-ssl-validation \
-      --username ${OPSMAN_USERNAME} \
-      --password ${OPSMAN_PASSWORD} \
+      --username "${OPSMAN_USERNAME}" \
+      --password "${OPSMAN_PASSWORD}" \
       delete-installation
   fi
 }
@@ -47,6 +32,8 @@ function delete-infrastructure() {
   echo "Executing Terraform Destroy ...."
   echo "=============================================================================================="
 
+  terraform init "pcf-pipelines/install-pcf/azure/terraform/${AZURE_PCF_TERRAFORM_TEMPLATE}"
+
   terraform destroy -force \
     -var "subscription_id=${AZURE_SUBSCRIPTION_ID}" \
     -var "client_id=${AZURE_CLIENT_ID}" \
@@ -62,6 +49,8 @@ function delete-infrastructure() {
     -var "azure_terraform_subnet_dynamic_services_cidr=dontcare" \
     -var "ert_subnet_id=dontcare" \
     -var "pcf_ert_domain=dontcare" \
+    -var "system_domain=dontcare" \
+    -var "apps_domain=dontcare" \
     -var "pub_ip_pcf_lb=dontcare" \
     -var "pub_ip_id_pcf_lb=dontcare" \
     -var "pub_ip_tcp_lb=dontcare" \
@@ -76,12 +65,11 @@ function delete-infrastructure() {
     -var "subnet_infra_id=dontcare" \
     -var "ops_manager_image_uri=dontcare" \
     -var "vm_admin_username=dontcare" \
-    -var "vm_admin_password=dontcare" \
     -var "vm_admin_public_key=dontcare" \
     -var "azure_multi_resgroup_network=dontcare" \
     -var "azure_multi_resgroup_pcf=dontcare" \
-    -var "priv_ip_opsman_vm=dontcare" \
-    -var "azure_account_name=dontcare" \
+    -var "azure_opsman_priv_ip=dontcare" \
+    -var "azure_storage_account_name=dontcare" \
     -var "azure_buildpacks_container=dontcare" \
     -var "azure_droplets_container=dontcare" \
     -var "azure_packages_container=dontcare" \

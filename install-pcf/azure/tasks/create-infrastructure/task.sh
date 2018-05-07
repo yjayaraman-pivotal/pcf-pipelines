@@ -1,22 +1,5 @@
 #!/bin/bash
 set -e
-az cloud set --name ${AZURE_ENVIRONMENT}
-
-files=$(az storage blob list -c ${CONTAINER} | jq -r .[].name)
-
-set +e
-echo ${files} | grep terraform.tfstate 
-if [ "$?" -gt "0" ]; then
-  echo "terraform.tfstate file found, skipping"
-  exit 1
-else
-  az storage blob download -c ${CONTAINER} -n terraform.tfstate -f terraform.tfstate
-  set +x
-  if [ "$?" -gt "0" ]; then
-    echo "Failed to download tfstate file"
-    exit 1
-  fi
-fi
 
 # Copy base template with no clobber if not using the base template
 if [[ ! ${AZURE_PCF_TERRAFORM_TEMPLATE} == "c0-azure-base" ]]; then
@@ -63,12 +46,13 @@ echo "==========================================================================
 echo "Executing Terraform Plan ..."
 echo "=============================================================================================="
 
+terraform init "pcf-pipelines/install-pcf/azure/terraform/${AZURE_PCF_TERRAFORM_TEMPLATE}"
+
 terraform plan \
   -var "subscription_id=${AZURE_SUBSCRIPTION_ID}" \
   -var "client_id=${AZURE_CLIENT_ID}" \
   -var "client_secret=${AZURE_CLIENT_SECRET}" \
   -var "tenant_id=${AZURE_TENANT_ID}" \
-  -var "environment=${AZURE_TERRAFORM_ENVIRONMENT}" \
   -var "location=${AZURE_REGION}" \
   -var "env_name=${AZURE_TERRAFORM_PREFIX}" \
   -var "env_short_name=${ENV_SHORT_NAME}" \
@@ -79,14 +63,15 @@ terraform plan \
   -var "azure_terraform_subnet_dynamic_services_cidr=${AZURE_TERRAFORM_SUBNET_DYNAMIC_SERVICES_CIDR}" \
   -var "ert_subnet_id=${ERT_SUBNET}" \
   -var "pcf_ert_domain=${PCF_ERT_DOMAIN}" \
+  -var "system_domain=${SYSTEM_DOMAIN}" \
+  -var "apps_domain=${APPS_DOMAIN}" \
   -var "ops_manager_image_uri=${PCF_OPSMAN_IMAGE_URI}" \
   -var "vm_admin_username=${AZURE_VM_ADMIN}" \
-  -var "vm_admin_password=${AZURE_VM_PASSWORD}" \
   -var "vm_admin_public_key=${PCF_SSH_KEY_PUB}" \
   -var "azure_multi_resgroup_network=${AZURE_MULTI_RESGROUP_NETWORK}" \
   -var "azure_multi_resgroup_pcf=${AZURE_MULTI_RESGROUP_PCF}" \
-  -var "priv_ip_opsman_vm=${AZURE_TERRAFORM_OPSMAN_PRIV_IP}" \
-  -var "azure_account_name=${AZURE_ACCOUNT_NAME}" \
+  -var "azure_opsman_priv_ip=${AZURE_TERRAFORM_OPSMAN_PRIV_IP}" \
+  -var "azure_storage_account_name=${AZURE_STORAGE_ACCOUNT_NAME}" \
   -var "azure_buildpacks_container=${AZURE_BUILDPACKS_CONTAINER}" \
   -var "azure_droplets_container=${AZURE_DROPLETS_CONTAINER}" \
   -var "azure_packages_container=${AZURE_PACKAGES_CONTAINER}" \

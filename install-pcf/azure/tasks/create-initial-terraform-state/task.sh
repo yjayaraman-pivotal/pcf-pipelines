@@ -16,12 +16,11 @@ set -ex
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-az cloud set --name ${AZURE_ENVIRONMENT}
-
-files=$(az storage blob list -c ${CONTAINER} | jq -r .[].name)
+blobs=$(az storage blob list -c ${CONTAINER})
+files=$(echo "$blobs" | jq -r .[].name)
 
 set +e
-echo ${files} | grep terraform.tfstate 
+echo ${files} | grep terraform.tfstate
 if [ "$?" -gt "0" ]; then
   echo "{\"version\": 3}" > terraform.tfstate
   az storage blob upload -c ${CONTAINER} -n terraform.tfstate -f terraform.tfstate

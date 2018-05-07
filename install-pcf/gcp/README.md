@@ -4,11 +4,20 @@
 
 This pipeline uses Terraform to create all the infrastructure required to run a
 3 AZ PCF deployment on GCP per the Customer[0] [reference
-architecture](http://docs.pivotal.io/pivotalcf/1-10/refarch/gcp/gcp_ref_arch.html).
+architecture](http://docs.pivotal.io/pivotalcf/refarch/gcp/gcp_ref_arch.html).
+
+## Prerequisites
+
+- [install a Concourse server](https://concourse-ci.org/installing.html)
+- download the [Fly CLI](https://concourse-ci.org/fly-cli.html) to interact with the Concourse server
+- depending on where you've installed Concourse, you may need to set up
+[additional firewall rules](FIREWALL.md "Firewall") to allow Concourse to reach
+third-party sources of pipeline dependencies
+- ensure you have set up DNS and certs correctly, for example, our pipelines require that you have set up the Ops Manager url with `opsman` as a prefix.
 
 ## Usage
 
-This pipeline downloads artifacts from DockerHub (czero/cflinuxfs2 and custom
+This pipeline downloads artifacts from DockerHub (pcfnorm/rootfs and custom
 docker-image resources) and the configured Google Cloud Storage bucket
 (terraform.tfstate file), and as such the Concourse instance must have access
 to those. Note that Terraform outputs a .tfstate file that contains plaintext
@@ -34,7 +43,7 @@ secrets.
   * DNS Administrator
   * Storage Admin
 
-4. [Set the pipeline](http://concourse.ci/single-page.html#fly-set-pipeline), using your updated params.yml:
+4. [Set the pipeline](http://concourse-ci.org/single-page.html#fly-set-pipeline), using your updated params.yml:
   ```
   fly -t lite set-pipeline -p deploy-pcf -c pipeline.yml -l params.yml
   ```
@@ -93,6 +102,11 @@ story](https://www.pivotaltracker.com/n/projects/975916/stories/133642819) to
 address this issue.
 
 
+### Toggling Errands
+
+`ert_errands_to_disable` does not function as expected; use caution when toggling the errands functionality. Currently the only functionality that works is it disables or enables errands; the functionality to choose which errand to disable does not function as expected. 
+
+
 ## Troubleshooting
 
 #### Error message: ####
@@ -148,7 +162,7 @@ address this issue.
       "type": "service_account",
       "project_id": "cf-example",
       "private_key_id": "REDACTED",
-      "private_key": "-----BEGIN PRIVATE KEY-----...-----END PRIVATE KEY-----\n",
+      "private_key": "-----BEGIN PRIVATE KEY-----...example...-----END PRIVATE KEY-----\n",
       "client_email": "customer0-example.iam.gserviceaccount.com",
       "client_id": "REDACTED",
       "auth_uri": "https://accounts.google.com/o/oauth2/auth",
