@@ -19,7 +19,6 @@ iaas_configuration=$(
   --arg nsx_address "$NSX_ADDRESS" \
   --arg nsx_username "$NSX_USERNAME" \
   --arg nsx_password "$NSX_PASSWORD" \
-  --arg nsx_ca_certificate "$NSX_CA_CERTIFICATE" \
   '
   {
     "vcenter_host": $vcenter_host,
